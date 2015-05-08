@@ -13,7 +13,8 @@ def rewrite_lookup_key(model, lookup_key):
         # If we are doing a lookup on a translatable field, we want to rewrite it to the actual field name
         # For example, we want to rewrite "name__startswith" to "name_fr__startswith"
         if pieces[0] in model._meta.translatable_fields:
-            lookup_key = get_real_field_name(pieces[0], get_language().split('-')[0])
+            if get_language() not in ['zh-hant', 'zh-hans']:
+                lookup_key = get_real_field_name(pieces[0], get_language().split('-')[0])
             remaining_lookup = '__'.join(pieces[1:])
             if remaining_lookup:
                 lookup_key = '%s__%s' % (lookup_key, remaining_lookup)
