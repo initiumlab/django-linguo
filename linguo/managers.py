@@ -14,7 +14,6 @@ def rewrite_lookup_key(model, lookup_key):
         # For example, we want to rewrite "name__startswith" to "name_fr__startswith"
         if pieces[0] in model._meta.translatable_fields:
             lookup_key = get_real_field_name(pieces[0], get_language().split('-')[0])
-
             remaining_lookup = '__'.join(pieces[1:])
             if remaining_lookup:
                 lookup_key = '%s__%s' % (lookup_key, remaining_lookup)
@@ -48,8 +47,12 @@ def get_fields_to_translatable_models(model):
     for field_name in model._meta.get_all_field_names():
         field_object, modelclass, direct, m2m = model._meta.get_field_by_name(field_name)
         if direct and isinstance(field_object, RelatedField):
-            if issubclass(field_object.related.parent_model, MultilingualModel):
-                results.append((field_name, field_object.related.parent_model))
+            try:
+                parent_model = field_object.related.parent_model
+            except AttributeError:
+                parent_model = field_object.related.model
+            if issubclass(parent_model, MultilingualModel):
+                results.append((field_name, parent_model))
     return results
 
 
