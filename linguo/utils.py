@@ -7,11 +7,11 @@ def get_real_field_name(field_name, language):
     Returns the field that stores the value of the given translation
     in the specified language.
     """
-    lang_code = get_normalized_language(language)
+    lang_code = get_normalized_language(language)    
     if lang_code == get_normalized_language(settings.LANGUAGES[0][0]):
         return field_name
     else:
-        return '%s_%s' % (field_name, language)
+        return '%s_%s' % (field_name, language.replace('-', '_'))
 
 
 def get_normalized_language(language_code):
@@ -19,7 +19,7 @@ def get_normalized_language(language_code):
     Returns the actual language extracted from the given language code
     (ie. locale stripped off). For example, 'en-us' becomes 'en'.
     """
-    return language_code if language_code in ['zh-hant', 'zh-hans'] else language_code.split('-')[0]
+    return language_code.replace('-', '_') if language_code in ['zh-hant', 'zh-hans'] else language_code.split('-')[0]
 
 
 def get_current_language():
