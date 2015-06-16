@@ -19,7 +19,12 @@ def get_normalized_language(language_code):
     Returns the actual language extracted from the given language code
     (ie. locale stripped off). For example, 'en-us' becomes 'en'.
     """
-    return language_code.replace('-', '_') if language_code in ['zh-hant', 'zh-hans'] else language_code.split('-')[0]
+    if language_code is None:
+        language_code = settings.LANGUAGE_CODE
+    return language_code.replace('-', '_') \
+        if language_code in ['zh-hant', 'zh-hans'] \
+        else language_code.split('-')[0]
+        
 
 
 def get_current_language():

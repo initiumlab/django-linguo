@@ -15,6 +15,8 @@ def rewrite_lookup_key(model, lookup_key):
         if pieces[0] in model._meta.translatable_fields:
             if get_language() not in ['zh-hant', 'zh-hans']:
                 lookup_key = get_real_field_name(pieces[0], get_language().split('-')[0])
+            else:
+                lookup_key = get_real_field_name(pieces[0], get_language())
             remaining_lookup = '__'.join(pieces[1:])
             if remaining_lookup:
                 lookup_key = '%s__%s' % (lookup_key, remaining_lookup)
