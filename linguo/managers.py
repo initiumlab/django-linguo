@@ -47,15 +47,17 @@ def get_fields_to_translatable_models(model):
     results = []
     from linguo.models import MultilingualModel  # to avoid circular import
 
-    for field_name in model._meta.get_all_field_names():
-        field_object, modelclass, direct, m2m = model._meta.get_field_by_name(field_name)
+    for field in model._meta.get_fields():
+        field_name = field.name
+        #field_object, modelclass, direct, m2m = model._meta.get_field_by_name(field_name)
+        field_object = model._meta.get_field(field_name)
+        direct = not field_object.auto_created or field_object.concrete
         if direct and isinstance(field_object, RelatedField):
             try:
-                parent_model = field_object.related.parent_model
+                if issubclass(field_object.related.parent_model, MultilingualModel):
+                    results.append((field_name, field_object.related.parent_model))
             except AttributeError:
-                parent_model = field_object.related.model
-            if issubclass(parent_model, MultilingualModel):
-                results.append((field_name, parent_model))
+                pass
     return results
 
 
