@@ -311,3 +311,5 @@ License
 This app is licensed under the BSD license. See the LICENSE file for details.
 Basically, feel free to do what you want with this code, but I'm not liable if
 your computer blows up.
+
+TEST
